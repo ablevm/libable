@@ -34,7 +34,7 @@ able_host_exec(able_host_t *host) {
 					host->c.d0 = 4;
 					break;
 				}
-				host->c.d0 = able_host_wait_shim(host, &host->p[pn].e, NULL);
+				host->c.d0 = able_host_node_wait_shim(host->n, &host->p[pn].e, NULL);
 				if (host->c.d0 == 0)
 					return -5;
 				break;
@@ -112,7 +112,7 @@ able_host_exec(able_host_t *host) {
 					host->c.d0 = 8;
 					break;
 				}
-				host->c.d0 = able_link_send(&host->l[ln], host->c.b + a, u);
+				host->c.d0 = able_host_link_send_shim(host->l[ln], host->c.b + a, u);
 				break;
 			}
 			default:
