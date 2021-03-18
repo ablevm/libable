@@ -44,9 +44,8 @@ able_link_send_done(able_link_t *link, uint16_t size) {
 		atomic_store(&link->sl, 0);
 		return y;
 	}
-	y = able_link_node_post_shim(n, &p->e);
 	atomic_store(&link->sl, 0);
-	return y;
+	return able_link_node_post_shim(n, &p->e);
 }
 
 int
