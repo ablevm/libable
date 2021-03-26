@@ -1,9 +1,9 @@
 typedef int
-(*able_task_exec_t)(void *user);
+(*able_task_exec_t)(void *task);
 
 typedef struct {
-	able_task_exec_t f;
-	void *u;
+	able_task_exec_t ef;
+	void *t;
 	pthread_t c;
 } able_task_t;
 

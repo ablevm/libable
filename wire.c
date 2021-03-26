@@ -8,10 +8,10 @@
 #include <stdbool.h>
 
 void
-able_wire_bind(able_wire_t *wire, able_port_t *port, uint32_t mark, void *user) {
+able_wire_bind(able_wire_t *wire, able_port_t *port, uint32_t mark, void *node) {
 	wire->p = port;
 	wire->i = mark;
-	wire->u = user;
+	wire->n = node;
 }
 
 int
@@ -22,7 +22,7 @@ able_wire_join(able_wire_t *wire, able_link_t *link) {
 		return -3;
 	link->p = wire->p;
 	link->i = wire->i;
-	link->u = wire->u;
+	link->n = wire->n;
 	atomic_store(&link->sl, 0);
 	wire->l = link;
 	return 0;

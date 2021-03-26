@@ -36,8 +36,8 @@ able_link_send_done(able_link_t *link, uint16_t size) {
 		atomic_store(&link->sl, 0);
 		return y;
 	}
-	void *u;
-	u = link->u;
+	void *n;
+	n = link->n;
 	int y;
 	y = able_port_send_done(p, size);
 	if (y != 0) {
