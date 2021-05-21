@@ -45,9 +45,8 @@
 // name ;
 #define INSTX2(S) { \
 		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (core->p + sizeof(uint##S##_t) > core->bc) { \
+		if (core->p + sizeof(uint##S##_t) > core->bc) \
 			return -2; \
-		} \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, core->p); \
 		core->p = F(UINT##S##_MAX, core->p, i); \
@@ -56,9 +55,8 @@
 // name
 #define INSTX3(S) { \
 		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (core->p + sizeof(uint##S##_t) > core->bc) { \
+		if (core->p + sizeof(uint##S##_t) > core->bc) \
 			return -2; \
-		} \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, core->p); \
 		ICC(core); \
@@ -70,9 +68,8 @@
 #define INSTX4(S) \
 	if (core->d0 == 0) { \
 		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (core->p + sizeof(uint##S##_t) > core->bc) { \
+		if (core->p + sizeof(uint##S##_t) > core->bc) \
 			return -2; \
-		} \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, core->p); \
 		core->p = F(UINT##S##_MAX, core->p, i); \
@@ -84,9 +81,8 @@
 #define INSTX5(S) \
 	if (core->d0 < 0) { \
 		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (core->p + sizeof(uint##S##_t) > core->bc) { \
+		if (core->p + sizeof(uint##S##_t) > core->bc) \
 			return -2; \
-		} \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, core->p); \
 		core->p = F(UINT##S##_MAX, core->p, i); \
@@ -99,9 +95,8 @@
 	if (core->c0 != 0) { \
 		core->c0--; \
 		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (core->p + sizeof(uint##S##_t) > core->bc) { \
+		if (core->p + sizeof(uint##S##_t) > core->bc) \
 			return -2; \
-		} \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, core->p); \
 		core->p = F(UINT##S##_MAX, core->p, i); \
@@ -113,18 +108,16 @@
 // lit
 #define INSTX7(S) \
 	core->p = A(sizeof(uint##S##_t), core->p); \
-	if (core->p + sizeof(uint##S##_t) > core->bc) { \
+	if (core->p + sizeof(uint##S##_t) > core->bc) \
 		return -2; \
-	} \
 	ICD(core); \
 	core->d0 = V(int##S##_t, core->b, core->p); \
 	core->p += sizeof(uint##S##_t);
 
 // r!
 #define INSTX8(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->r[i] = F(UINT##S##_MAX, core->p, (uint##S##_t)core->d0); \
@@ -134,9 +127,8 @@
 
 // r@
 #define INSTX9(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
@@ -146,54 +138,48 @@
 
 // @r
 #define INSTXA(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
 		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		ICD(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
 	}
 
 // !r
 #define INSTXB(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
 		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DCD(core); \
 	}
 
 // @r+
 #define INSTXC(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
 		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		ICD(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
 		core->r[i] += sizeof(int##S##_t); \
@@ -201,18 +187,16 @@
 
 // !r+
 #define INSTXD(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
 		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DCD(core); \
 		core->r[i] += sizeof(int##S##_t); \
@@ -220,9 +204,8 @@
 
 // -@r
 #define INSTXE(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
@@ -230,18 +213,16 @@
 		core->r[i] -= sizeof(int##S##_t); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		ICD(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
 	}
 
 // -!r
 #define INSTXF(S) { \
-		if (core->p + sizeof(uint8_t) > core->bc) { \
+		if (core->p + sizeof(uint8_t) > core->bc) \
 			return -2; \
-		} \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p) & 31; \
 		core->p++; \
@@ -249,9 +230,8 @@
 		core->r[i] -= sizeof(int##S##_t); \
 		uint64_t a; \
 		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
-		if (a + sizeof(int##S##_t) > core->bc) { \
+		if (a + sizeof(int##S##_t) > core->bc) \
 			return -2; \
-		} \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DCD(core); \
 	}
@@ -336,9 +316,8 @@
 	DCD(core);
 // /mod
 #define INST1B { \
-		if (core->d0 == 0) {\
+		if (core->d0 == 0) \
 			return -3; \
-		} \
 		int64_t t0, t1; \
 		t0 = core->d0; \
 		t1 = core->d1; \
@@ -520,10 +499,9 @@
 	core->d1 = (uint64_t)core->d1 * (uint64_t)core->d0; \
 	DCD(core);
 // u/mod
-#define INST5B {\
-		if (core->d0 == 0) { \
+#define INST5B { \
+		if (core->d0 == 0) \
 			return -3; \
-		} \
 		uint64_t t0, t1; \
 		t0 = core->d0; \
 		t1 = core->d1; \
@@ -560,13 +538,11 @@
 	}
 
 #define NEXT \
-	if (core->ts == 0) { \
+	if (core->ts == 0) \
 		return -1; \
-	} \
 	core->ts--; \
-	if (core->p + sizeof(uint8_t) > core->bc) { \
+	if (core->p + sizeof(uint8_t) > core->bc) \
 		return -2; \
-	} \
 	core->i = V(uint8_t, core->b, core->p); \
 	core->p++; \
 	goto *inst[core->i];
