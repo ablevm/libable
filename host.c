@@ -52,11 +52,11 @@ able_host_exec(able_host_t *host) {
 					host->c.d0 = 2;
 					break;
 				}
-				if (a > 0 && (a > UINT64_MAX - u)) {
+				if (a > UINT64_MAX - u) {
 					host->c.d0 = 3;
 					break;
 				}
-				if (a + u > host->c.bc) {
+				if (a >= host->c.bc || a + u > host->c.bc) {
 					host->c.d0 = 4;
 					break;
 				}
@@ -100,11 +100,11 @@ able_host_exec(able_host_t *host) {
 					host->c.d0 = 5;
 					break;
 				}
-				if (a > 0 && (a > UINT64_MAX - u)) {
+				if (a > UINT64_MAX - u) {
 					host->c.d0 = 6;
 					break;
 				}
-				if (a + u > host->c.bc) {
+				if (a >= host->c.bc || a + u > host->c.bc) {
 					host->c.d0 = 7;
 					break;
 				}
