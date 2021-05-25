@@ -110,12 +110,12 @@
 
 // lit
 #define INSTX7(S) \
-	core->p = A(sizeof(uint##S##_t), core->p); \
-	if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+	core->p = A(sizeof(int##S##_t), core->p); \
+	if (G(core->bc, core->p, sizeof(int##S##_t))) \
 		return -2; \
 	ICD(core); \
 	core->d0 = V(int##S##_t, core->b, core->p); \
-	core->p += sizeof(uint##S##_t);
+	core->p += sizeof(int##S##_t);
 
 // r!
 #define INSTX8(S) { \
