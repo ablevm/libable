@@ -7,14 +7,23 @@
 #include "core.h"
 #include "host.h"
 
+#define DP_MAX 33
+#define CP_MAX 32
+
+#define DSU(C, N) \
+	((C)->dp < (N))
+
+#define DSO(C, N) \
+	((C)->dp + (N) > DP_MAX)
+
 #define DSI(C) \
 	(C)->d[(C)->dp] = (C)->d1; \
-	(C)->dp = (C)->dp + 1 & 31; \
+	(C)->dp = (C)->dp + 1; \
 	(C)->d1 = (C)->d0;
 
 #define DSD(C) \
 	(C)->d0 = (C)->d1; \
-	(C)->dp = (C)->dp - 1 & 31; \
+	(C)->dp = (C)->dp - 1; \
 	(C)->d1 = (C)->d[(C)->dp];
 
 int
@@ -28,6 +37,8 @@ able_host_exec(able_host_t *host) {
 		}
 		switch (host->c.i) {
 			case 0x80: { // wait ( p - f)
+				if (DSU(&host->c, 1))
+					return -6;
 				uint32_t pn;
 				pn = host->c.d0;
 				if (pn >= host->pc) {
@@ -40,6 +51,8 @@ able_host_exec(able_host_t *host) {
 				break;
 			}
 			case 0x81: { // clip ( a # p - f)
+				if (DSU(&host->c, 3))
+					return -6;
 				uint32_t pn;
 				pn = host->c.d0;
 				DSD(&host->c);
@@ -64,6 +77,10 @@ able_host_exec(able_host_t *host) {
 				break;
 			}
 			case 0x82: { // recv ( p - a # f)
+				if (DSU(&host->c, 1))
+					return -6;
+				if (DSO(&host->c, 2))
+					return -7;
 				uint32_t pn;
 				pn = host->c.d0;
 				if (pn >= host->pc) {
@@ -88,6 +105,8 @@ able_host_exec(able_host_t *host) {
 				break;
 			}
 			case 0x83: { // send ( a # l - f)
+				if (DSU(&host->c, 3))
+					return -6;
 				uint32_t ln;
 				ln = host->c.d0;
 				DSD(&host->c);
