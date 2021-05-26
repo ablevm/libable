@@ -7,24 +7,10 @@
 #include "core.h"
 #include "host.h"
 
-#define DP_MAX 33
-#define CP_MAX 32
-
-#define DSU(C, N) \
-	((C)->dp < (N))
-
-#define DSO(C, N) \
-	((C)->dp + (N) > DP_MAX)
-
-#define DSI(C) \
-	(C)->d[(C)->dp] = (C)->d1; \
-	(C)->dp = (C)->dp + 1; \
-	(C)->d1 = (C)->d0;
-
-#define DSD(C) \
-	(C)->d0 = (C)->d1; \
-	(C)->dp = (C)->dp - 1; \
-	(C)->d1 = (C)->d[(C)->dp];
+#define DSU ABLE_CORE_DSU
+#define DSO ABLE_CORE_DSO
+#define DSI ABLE_CORE_DSI
+#define DSD ABLE_CORE_DSD
 
 int
 able_host_exec(able_host_t *host) {
