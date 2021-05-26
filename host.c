@@ -12,6 +12,8 @@
 #define DSI ABLE_CORE_DSI
 #define DSD ABLE_CORE_DSD
 
+#define DS0 ABLE_CORE_DSV(&host->c, 1)
+
 int
 able_host_exec(able_host_t *host) {
 	host->c.ts = host->ts;
@@ -26,13 +28,13 @@ able_host_exec(able_host_t *host) {
 				if (DSU(&host->c, 1))
 					return -6;
 				uint32_t pn;
-				pn = host->c.d0;
+				pn = DS0;
 				if (pn >= host->pc) {
-					host->c.d0 = 4;
+					DS0 = 4;
 					break;
 				}
-				host->c.d0 = able_host_node_wait_shim(host->n, &host->p[pn].e, NULL);
-				if (host->c.d0 == 0)
+				DS0 = able_host_node_wait_shim(host->n, &host->p[pn].e, NULL);
+				if (DS0 == 0)
 					return -5;
 				break;
 			}
@@ -40,26 +42,26 @@ able_host_exec(able_host_t *host) {
 				if (DSU(&host->c, 3))
 					return -6;
 				uint32_t pn;
-				pn = host->c.d0;
+				pn = DS0;
 				DSD(&host->c);
 				uint64_t u;
-				u = host->c.d0;
+				u = DS0;
 				DSD(&host->c);
 				uint64_t a;
-				a = host->c.d0;
+				a = DS0;
 				if (pn >= host->pc) {
-					host->c.d0 = 2;
+					DS0 = 2;
 					break;
 				}
 				if (a > UINT64_MAX - u) {
-					host->c.d0 = 3;
+					DS0 = 3;
 					break;
 				}
 				if (a >= host->c.bc || a + u > host->c.bc) {
-					host->c.d0 = 4;
+					DS0 = 4;
 					break;
 				}
-				host->c.d0 = able_port_clip(&host->p[pn], host->c.b + a, u);
+				DS0 = able_port_clip(&host->p[pn], host->c.b + a, u);
 				break;
 			}
 			case 0x82: { // recv ( p - a # f)
@@ -68,25 +70,25 @@ able_host_exec(able_host_t *host) {
 				if (DSO(&host->c, 2))
 					return -7;
 				uint32_t pn;
-				pn = host->c.d0;
+				pn = DS0;
 				if (pn >= host->pc) {
-					host->c.d0 = 1;
+					DS0 = 1;
 					break;
 				}
 				able_port_mesg_t *m;
 				m = able_port_recv(&host->p[pn]);
 				if (m != NULL) {
-					host->c.d0 = m->b - host->c.b;
+					DS0 = m->b - host->c.b;
 					DSI(&host->c);
-					host->c.d0 = m->bc;
+					DS0 = m->bc;
 					DSI(&host->c);
-					host->c.d0 = 0;
+					DS0 = 0;
 				} else {
-					host->c.d0 = 0;
+					DS0 = 0;
 					DSI(&host->c);
-					host->c.d0 = 0;
+					DS0 = 0;
 					DSI(&host->c);
-					host->c.d0 = -1;
+					DS0 = -1;
 				}
 				break;
 			}
@@ -94,30 +96,30 @@ able_host_exec(able_host_t *host) {
 				if (DSU(&host->c, 3))
 					return -6;
 				uint32_t ln;
-				ln = host->c.d0;
+				ln = DS0;
 				DSD(&host->c);
 				uint16_t u;
-				u = host->c.d0;
+				u = DS0;
 				DSD(&host->c);
 				uint64_t a;
-				a = host->c.d0;
+				a = DS0;
 				if (ln >= host->lc) {
-					host->c.d0 = 5;
+					DS0 = 5;
 					break;
 				}
 				if (a > UINT64_MAX - u) {
-					host->c.d0 = 6;
+					DS0 = 6;
 					break;
 				}
 				if (a >= host->c.bc || a + u > host->c.bc) {
-					host->c.d0 = 7;
+					DS0 = 7;
 					break;
 				}
 				if (u > UINT16_MAX - sizeof(able_port_mesg_t)) {
-					host->c.d0 = 8;
+					DS0 = 8;
 					break;
 				}
-				host->c.d0 = able_host_link_send_shim(host->l[ln], host->c.b + a, u);
+				DS0 = able_host_link_send_shim(host->l[ln], host->c.b + a, u);
 				break;
 			}
 			default:

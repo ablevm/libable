@@ -4,11 +4,8 @@ typedef struct {
 	uint64_t p;
 	uint8_t i;
 	uint8_t dp;
-	int64_t d0;
-	int64_t d1;
-	uint64_t d[32];
+	int64_t d[32];
 	uint8_t cp;
-	uint64_t c0;
 	uint64_t c[32];
 	uint64_t r[32];
 	uint64_t ts;
@@ -17,8 +14,8 @@ typedef struct {
 int
 able_core_exec(able_core_t *core);
 
-#define ABLE_CORE_DP_MAX 33
-#define ABLE_CORE_CP_MAX 32
+#define ABLE_CORE_DP_MAX 31
+#define ABLE_CORE_CP_MAX 31
 #define ABLE_CORE_RI_MAX 31
 
 #define ABLE_CORE_A(S, V) \
@@ -40,14 +37,13 @@ able_core_exec(able_core_t *core);
 	((C)->dp + (N) > ABLE_CORE_DP_MAX)
 
 #define ABLE_CORE_DSI(C) \
-	(C)->d[(C)->dp] = (C)->d1; \
-	(C)->dp = (C)->dp + 1; \
-	(C)->d1 = (C)->d0;
+	(C)->dp++;
 
 #define ABLE_CORE_DSD(C) \
-	(C)->d0 = (C)->d1; \
-	(C)->dp = (C)->dp - 1; \
-	(C)->d1 = (C)->d[(C)->dp];
+	(C)->dp--;
+
+#define ABLE_CORE_DSV(C, N) \
+	(C)->d[(C)->dp - N]
 
 #define ABLE_CORE_CSU(C, N) \
 	((C)->cp < (N))
@@ -56,9 +52,10 @@ able_core_exec(able_core_t *core);
 	((C)->cp + (N) > ABLE_CORE_CP_MAX)
 
 #define ABLE_CORE_CSI(C) \
-	(C)->c[(C)->cp] = (C)->c0; \
-	(C)->cp = (C)->cp + 1;
+	(C)->cp++;
 
 #define ABLE_CORE_CSD(C) \
-	(C)->cp = (C)->cp - 1; \
-	(C)->c0 = (C)->c[(C)->cp];
+	(C)->cp--;
+
+#define ABLE_CORE_CSV(C, N) \
+	(C)->c[(C)->cp - N]

@@ -15,11 +15,16 @@
 #define CSI ABLE_CORE_CSI
 #define CSD ABLE_CORE_CSD
 
+#define DS0 ABLE_CORE_DSV(core, 1)
+#define DS1 ABLE_CORE_DSV(core, 2)
+#define DS2 ABLE_CORE_DSV(core, 3)
+#define CS0 ABLE_CORE_CSV(core, 1)
+
 // ;
 #define INSTX0(S) \
 	if (CSU(core, 1)) \
 		return -6; \
-	core->p = F(UINT##S##_MAX, core->p, (uint##S##_t)core->c0); \
+	core->p = F(UINT##S##_MAX, core->p, (uint##S##_t)CS0); \
 	CSD(core);
 
 // ex
@@ -27,8 +32,8 @@
 		if (CSU(core, 1)) \
 			return -6; \
 		uint##S##_t t; \
-		t = core->c0; \
-		core->c0 = core->p; \
+		t = CS0; \
+		CS0 = core->p; \
 		core->p = F(UINT##S##_MAX, core->p, t); \
 	}
 
@@ -54,7 +59,7 @@
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, p); \
 		CSI(core); \
-		core->c0 = p + sizeof(uint##S##_t); \
+		CS0 = p + sizeof(uint##S##_t); \
 		core->p = F(UINT##S##_MAX, p, i); \
 	}
 
@@ -62,7 +67,7 @@
 #define INSTX4(S) \
 	if (DSU(core, 1)) \
 		return -6; \
-	if (core->d0 == 0) { \
+	if (DS0 == 0) { \
 		uint64_t p; \
 		p = A(sizeof(uint##S##_t), core->p); \
 		if (G(core->bc, p, sizeof(uint##S##_t))) \
@@ -78,7 +83,7 @@
 #define INSTX5(S) \
 	if (DSU(core, 1)) \
 		return -6; \
-	if (core->d0 < 0) { \
+	if (DS0 < 0) { \
 		uint64_t p; \
 		p = A(sizeof(uint##S##_t), core->p); \
 		if (G(core->bc, p, sizeof(uint##S##_t))) \
@@ -94,12 +99,12 @@
 #define INSTX6(S) \
 	if (CSU(core, 1)) \
 		return -6; \
-	if (core->c0 != 0) { \
+	if (CS0 != 0) { \
 		uint64_t p; \
 		p = A(sizeof(uint##S##_t), core->p); \
 		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
-		core->c0--; \
+		CS0--; \
 		uint##S##_t i; \
 		i = V(uint##S##_t, core->b, p); \
 		core->p = F(UINT##S##_MAX, p, i); \
@@ -117,7 +122,7 @@
 		if (G(core->bc, p, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
-		core->d0 = V(int##S##_t, core->b, p); \
+		DS0 = V(int##S##_t, core->b, p); \
 		core->p = p + sizeof(int##S##_t); \
 	}
 
@@ -131,7 +136,7 @@
 		i = V(uint8_t, core->b, core->p); \
 		if (i > ABLE_CORE_RI_MAX) \
 			return -8; \
-		core->r[i] = F(UINT##S##_MAX, core->p, (uint##S##_t)core->d0); \
+		core->r[i] = F(UINT##S##_MAX, core->p, (uint##S##_t)DS0); \
 		core->p++; \
 		DSD(core); \
 	}
@@ -148,7 +153,7 @@
 			return -8; \
 		core->p++; \
 		DSI(core); \
-		core->d0 = (int##S##_t)core->r[i]; \
+		DS0 = (int##S##_t)core->r[i]; \
 	}
 
 // @r
@@ -171,7 +176,7 @@
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
-		core->d0 = V(int##S##_t, core->b, a); \
+		DS0 = V(int##S##_t, core->b, a); \
 		core->r[i] = b; \
 		core->p = p; \
 	}
@@ -195,7 +200,7 @@
 		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
-		V(int##S##_t, core->b, a) = core->d0; \
+		V(int##S##_t, core->b, a) = DS0; \
 		DSD(core); \
 		core->r[i] = b; \
 		core->p = p; \
@@ -221,7 +226,7 @@
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
-		core->d0 = V(int##S##_t, core->b, a); \
+		DS0 = V(int##S##_t, core->b, a); \
 		core->r[i] = b + sizeof(int##S##_t); \
 		core->p = p; \
 	}
@@ -245,7 +250,7 @@
 		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
-		V(int##S##_t, core->b, a) = core->d0; \
+		V(int##S##_t, core->b, a) = DS0; \
 		DSD(core); \
 		core->r[i] = b + sizeof(int##S##_t); \
 		core->p = p; \
@@ -271,7 +276,7 @@
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
-		core->d0 = V(int##S##_t, core->b, a); \
+		DS0 = V(int##S##_t, core->b, a); \
 		core->r[i] = b; \
 		core->p = p; \
 	}
@@ -295,7 +300,7 @@
 		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
-		V(int##S##_t, core->b, a) = core->d0; \
+		V(int##S##_t, core->b, a) = DS0; \
 		DSD(core); \
 		core->r[i] = b; \
 		core->p = p; \
@@ -341,7 +346,7 @@
 	if (CSO(core, 1)) \
 		return -7; \
 	CSI(core); \
-	core->c0 = core->d0; \
+	CS0 = DS0; \
 	DSD(core);
 // pop
 #define INST11 \
@@ -350,72 +355,72 @@
 	if (DSO(core, 1)) \
 		return -7; \
 	DSI(core); \
-	core->d0 = core->c0; \
+	DS0 = CS0; \
 	CSD(core);
 // lshift
 #define INST12 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 << core->d0; \
+	DS1 = DS1 << DS0; \
 	DSD(core);
 // ashift
 #define INST13 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 >> core->d0; \
+	DS1 = DS1 >> DS0; \
 	DSD(core);
 // not
 #define INST14 \
 	if (DSU(core, 1)) \
 		return -6; \
-	core->d0 = ~core->d0;
+	DS0 = ~DS0;
 // and
 #define INST15 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 & core->d0; \
+	DS1 = DS1 & DS0; \
 	DSD(core);
 // or
 #define INST16 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 | core->d0; \
+	DS1 = DS1 | DS0; \
 	DSD(core);
 // xor
 #define INST17 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 ^ core->d0; \
+	DS1 = DS1 ^ DS0; \
 	DSD(core);
 // +
 #define INST18 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 + core->d0; \
+	DS1 = DS1 + DS0; \
 	DSD(core);
 // -
 #define INST19 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 - core->d0; \
+	DS1 = DS1 - DS0; \
 	DSD(core);
 // *
 #define INST1A \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = core->d1 * core->d0; \
+	DS1 = DS1 * DS0; \
 	DSD(core);
 // /mod
 #define INST1B { \
 		if (DSU(core, 2)) \
 			return -6; \
-		if (core->d0 == 0) \
+		if (DS0 == 0) \
 			return -3; \
 		int64_t t0, t1; \
-		t0 = core->d0; \
-		t1 = core->d1; \
-		core->d1 = t1 % t0; \
-		core->d0 = t1 / t0; \
+		t0 = DS0; \
+		t1 = DS1; \
+		DS1 = t1 % t0; \
+		DS0 = t1 / t0; \
 	}
 // drop
 #define INST1C \
@@ -428,7 +433,8 @@
 		return -6; \
 	if (DSO(core, 1)) \
 		return -7; \
-	DSI(core);
+	DSI(core); \
+	DS0 = DS1;
 // over
 #define INST1E { \
 		if (DSU(core, 2)) \
@@ -436,18 +442,18 @@
 		if (DSO(core, 1)) \
 			return -7; \
 		int64_t t; \
-		t = core->d1; \
+		t = DS1; \
 		DSI(core); \
-		core->d0 = t; \
+		DS0 = t; \
 	}
 // swap
 #define INST1F { \
 		if (DSU(core, 2)) \
 			return -6; \
 		int64_t t; \
-		t = core->d0; \
-		core->d0 = core->d1; \
-		core->d1 = t; \
+		t = DS0; \
+		DS0 = DS1; \
+		DS1 = t; \
 	}
 
 // ;
@@ -556,128 +562,126 @@
 	if (DSO(core, 1)) \
 		return -7; \
 	DSI(core); \
-	core->d0 = core->c0;
+	DS0 = CS0;
 // i!
 #define INST51 \
 	if (DSU(core, 1)) \
 		return -6; \
 	if (CSU(core, 1)) \
 		return -6; \
-	core->c0 = core->d0; \
+	CS0 = DS0; \
 	DSD(core);
 // =
 #define INST52 \
 	if (DSU(core, 2)) \
 		return -6; \
-	if (core->d1 == core->d0) \
-		core->d1 = -1; \
+	if (DS1 == DS0) \
+		DS1 = -1; \
 	else \
-		core->d1 = 0; \
+		DS1 = 0; \
 	DSD(core);
 // <
 #define INST53 \
 	if (DSU(core, 2)) \
 		return -6; \
-	if (core->d1 < core->d0) \
-		core->d1 = -1; \
+	if (DS1 < DS0) \
+		DS1 = -1; \
 	else \
-		core->d1 = 0; \
+		DS1 = 0; \
 	DSD(core);
 // negate
 #define INST54 \
 	if (DSU(core, 1)) \
 		return -6; \
-	core->d0 = -core->d0;
+	DS0 = -DS0;
 // abs
 #define INST55 \
 	if (DSU(core, 1)) \
 		return -6; \
-	if (core->d0 < 0) \
-		core->d0 = -core->d0;
+	if (DS0 < 0) \
+		DS0 = -DS0;
 // min
 #define INST56 \
 	if (DSU(core, 2)) \
 		return -6; \
-	if (core->d0 < core->d1) \
-		core->d1 = core->d0; \
+	if (DS0 < DS1) \
+		DS1 = DS0; \
 	DSD(core);
 // max
 #define INST57 \
 	if (DSU(core, 2)) \
 		return -6; \
-	if (core->d0 > core->d1) \
-		core->d1 = core->d0; \
+	if (DS0 > DS1) \
+		DS1 = DS0; \
 	DSD(core);
 // rshift
 #define INST58 \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = (uint64_t)core->d1 >> (uint64_t)core->d0; \
+	DS1 = (uint64_t)DS1 >> (uint64_t)DS0; \
 	DSD(core);
 // u<
 #define INST59 \
 	if (DSU(core, 2)) \
 		return -6; \
-	if ((uint64_t)core->d1 < (uint64_t)core->d0) \
-		core->d1 = -1; \
+	if ((uint64_t)DS1 < (uint64_t)DS0) \
+		DS1 = -1; \
 	else \
-		core->d1 = 0; \
+		DS1 = 0; \
 	DSD(core);
 // u*
 #define INST5A \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->d1 = (uint64_t)core->d1 * (uint64_t)core->d0; \
+	DS1 = (uint64_t)DS1 * (uint64_t)DS0; \
 	DSD(core);
 // u/mod
 #define INST5B { \
 		if (DSU(core, 2)) \
 			return -6; \
-		if (core->d0 == 0) \
+		if (DS0 == 0) \
 			return -3; \
 		uint64_t t0, t1; \
-		t0 = core->d0; \
-		t1 = core->d1; \
-		core->d1 = t1 % t0; \
-		core->d0 = t1 / t0; \
+		t0 = DS0; \
+		t1 = DS1; \
+		DS1 = t1 % t0; \
+		DS0 = t1 / t0; \
 	}
 // nip
 #define INST5C \
 	if (DSU(core, 2)) \
 		return -6; \
-	core->dp = core->dp - 1; \
-	core->d1 = core->d[core->dp];
+	DS1 = DS0; \
+	DSD(core);
 // tuck
 #define INST5D \
 	if (DSU(core, 2)) \
 		return -6; \
 	if (DSO(core, 1)) \
 		return -7; \
-	core->d[core->dp] = core->d0; \
-	core->dp = core->dp + 1;
+	DSI(core); \
+	DS0 = DS1; \
+	DS1 = DS2; \
+	DS2 = DS0;
 // rot
 #define INST5E { \
 		if (DSU(core, 3)) \
 			return -6; \
-		uint8_t dp; \
-		dp = core->dp - 1; \
 		int64_t t; \
-		t = core->d[dp]; \
-		core->d[dp] = core->d1; \
-		core->d1 = core->d0; \
-		core->d0 = t; \
+		t = DS2; \
+		DS2 = DS1; \
+		DS1 = DS0; \
+		DS0 = t; \
 	}
 // -rot
 #define INST5F { \
 		if (DSU(core, 3)) \
 			return -6; \
-		uint8_t dp; \
-		dp = core->dp - 1; \
 		int64_t t; \
-		t = core->d0; \
-		core->d0 = core->d1; \
-		core->d1 = core->d[dp]; \
-		core->d[dp] = t; \
+		t = DS0; \
+		DS0 = DS1; \
+		DS1 = DS2; \
+		DS2 = t; \
 	}
 
 #define NEXT \

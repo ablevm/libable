@@ -52,19 +52,17 @@ DETAILS
 
 Virtual Machine
 
-             i
- ...d d1     p
-        d0 c0 c...
-       r...
+      i
+      p
+     c...
+ ...d
+     r...
 
  i    8 bits               instruction
  p   64 bits               program counter
- d0  64 bits               circular data-stack
- d1  64 bits               
- d   64 bits * 32 (Wraps)  
- c0  64 bits               circular call-stack
- c   64 bits * 32 (Wraps)  
- r   64 bits * 32 (Wraps)  registers
+ d   64 bits * 32          linear data-stack
+ c   64 bits * 32          linear call-stack
+ r   64 bits * 32          registers
 
 8 bit unencoded instructions
 
