@@ -4,6 +4,7 @@
 
 #define DP_MAX 33
 #define CP_MAX 32
+#define RI_MAX 31
 
 #define A(S, V) \
 	(((V) + ((S) - 1)) & -(S))
@@ -160,7 +161,9 @@
 		if (G(core->bc, core->p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
+		i = V(uint8_t, core->b, core->p); \
+		if (i > RI_MAX) \
+			return -8; \
 		core->r[i] = F(UINT##S##_MAX, core->p, (uint##S##_t)core->d0); \
 		core->p++; \
 		DSD(core); \
@@ -173,7 +176,9 @@
 		if (G(core->bc, core->p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
+		i = V(uint8_t, core->b, core->p); \
+		if (i > RI_MAX) \
+			return -8; \
 		core->p++; \
 		DSI(core); \
 		core->d0 = (int##S##_t)core->r[i]; \
@@ -188,7 +193,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]); \
@@ -211,7 +218,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]); \
@@ -234,7 +243,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]); \
@@ -257,7 +268,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]); \
@@ -280,7 +293,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]) - sizeof(int##S##_t); \
@@ -303,7 +318,9 @@
 		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, p) & 31; \
+		i = V(uint8_t, core->b, p); \
+		if (i > RI_MAX) \
+			return -8; \
 		p++; \
 		uint64_t b; \
 		b = A(sizeof(int##S##_t), core->r[i]) - sizeof(int##S##_t); \
