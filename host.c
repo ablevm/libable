@@ -7,12 +7,12 @@
 #include "core.h"
 #include "host.h"
 
-#define ICD(C) \
+#define DSI(C) \
 	(C)->d[(C)->dp] = (C)->d1; \
 	(C)->dp = (C)->dp + 1 & 31; \
 	(C)->d1 = (C)->d0;
 
-#define DCD(C) \
+#define DSD(C) \
 	(C)->d0 = (C)->d1; \
 	(C)->dp = (C)->dp - 1 & 31; \
 	(C)->d1 = (C)->d[(C)->dp];
@@ -42,10 +42,10 @@ able_host_exec(able_host_t *host) {
 			case 0x81: { // clip ( a # p - f)
 				uint32_t pn;
 				pn = host->c.d0;
-				DCD(&host->c);
+				DSD(&host->c);
 				uint64_t u;
 				u = host->c.d0;
-				DCD(&host->c);
+				DSD(&host->c);
 				uint64_t a;
 				a = host->c.d0;
 				if (pn >= host->pc) {
@@ -74,15 +74,15 @@ able_host_exec(able_host_t *host) {
 				m = able_port_recv(&host->p[pn]);
 				if (m != NULL) {
 					host->c.d0 = m->b - host->c.b;
-					ICD(&host->c);
+					DSI(&host->c);
 					host->c.d0 = m->bc;
-					ICD(&host->c);
+					DSI(&host->c);
 					host->c.d0 = 0;
 				} else {
 					host->c.d0 = 0;
-					ICD(&host->c);
+					DSI(&host->c);
 					host->c.d0 = 0;
-					ICD(&host->c);
+					DSI(&host->c);
 					host->c.d0 = -1;
 				}
 				break;
@@ -90,10 +90,10 @@ able_host_exec(able_host_t *host) {
 			case 0x83: { // send ( a # l - f)
 				uint32_t ln;
 				ln = host->c.d0;
-				DCD(&host->c);
+				DSD(&host->c);
 				uint16_t u;
 				u = host->c.d0;
-				DCD(&host->c);
+				DSD(&host->c);
 				uint64_t a;
 				a = host->c.d0;
 				if (ln >= host->lc) {
