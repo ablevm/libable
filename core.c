@@ -47,35 +47,38 @@
 
 // name ;
 #define INSTX2(S) { \
-		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+		uint64_t p; \
+		p = A(sizeof(uint##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
 		uint##S##_t i; \
-		i = V(uint##S##_t, core->b, core->p); \
-		core->p = F(UINT##S##_MAX, core->p, i); \
+		i = V(uint##S##_t, core->b, p); \
+		core->p = F(UINT##S##_MAX, p, i); \
 	}
 
 // name
 #define INSTX3(S) { \
-		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+		uint64_t p; \
+		p = A(sizeof(uint##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
 		uint##S##_t i; \
-		i = V(uint##S##_t, core->b, core->p); \
+		i = V(uint##S##_t, core->b, p); \
 		CSI(core); \
-		core->c0 = core->p + sizeof(uint##S##_t); \
-		core->p = F(UINT##S##_MAX, core->p, i); \
+		core->c0 = p + sizeof(uint##S##_t); \
+		core->p = F(UINT##S##_MAX, p, i); \
 	}
 
 // if
 #define INSTX4(S) \
 	if (core->d0 == 0) { \
-		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+		uint64_t p; \
+		p = A(sizeof(uint##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
 		uint##S##_t i; \
-		i = V(uint##S##_t, core->b, core->p); \
-		core->p = F(UINT##S##_MAX, core->p, i); \
+		i = V(uint##S##_t, core->b, p); \
+		core->p = F(UINT##S##_MAX, p, i); \
 	} else \
 		core->p = A(sizeof(uint##S##_t), core->p) + sizeof(uint##S##_t); \
 	DSD(core);
@@ -83,12 +86,13 @@
 // -if
 #define INSTX5(S) \
 	if (core->d0 < 0) { \
-		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+		uint64_t p; \
+		p = A(sizeof(uint##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
 		uint##S##_t i; \
-		i = V(uint##S##_t, core->b, core->p); \
-		core->p = F(UINT##S##_MAX, core->p, i); \
+		i = V(uint##S##_t, core->b, p); \
+		core->p = F(UINT##S##_MAX, p, i); \
 	} else \
 		core->p = A(sizeof(uint##S##_t), core->p) + sizeof(uint##S##_t); \
 	DSD(core);
@@ -96,26 +100,29 @@
 // next
 #define INSTX6(S) \
 	if (core->c0 != 0) { \
-		core->c0--; \
-		core->p = A(sizeof(uint##S##_t), core->p); \
-		if (G(core->bc, core->p, sizeof(uint##S##_t))) \
+		uint64_t p; \
+		p = A(sizeof(uint##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(uint##S##_t))) \
 			return -2; \
+		core->c0--; \
 		uint##S##_t i; \
-		i = V(uint##S##_t, core->b, core->p); \
-		core->p = F(UINT##S##_MAX, core->p, i); \
+		i = V(uint##S##_t, core->b, p); \
+		core->p = F(UINT##S##_MAX, p, i); \
 	} else { \
 		CSD(core); \
 		core->p = A(sizeof(uint##S##_t), core->p) + sizeof(uint##S##_t); \
 	}
 
 // lit
-#define INSTX7(S) \
-	core->p = A(sizeof(int##S##_t), core->p); \
-	if (G(core->bc, core->p, sizeof(int##S##_t))) \
-		return -2; \
-	DSI(core); \
-	core->d0 = V(int##S##_t, core->b, core->p); \
-	core->p += sizeof(int##S##_t);
+#define INSTX7(S) { \
+		uint64_t p; \
+		p = A(sizeof(int##S##_t), core->p); \
+		if (G(core->bc, p, sizeof(int##S##_t))) \
+			return -2; \
+		DSI(core); \
+		core->d0 = V(int##S##_t, core->b, p); \
+		core->p = p + sizeof(int##S##_t); \
+	}
 
 // r!
 #define INSTX8(S) { \
@@ -141,102 +148,128 @@
 
 // @r
 #define INSTXA(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
+		core->r[i] = b; \
+		core->p = p; \
 	}
 
 // !r
 #define INSTXB(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DSD(core); \
+		core->r[i] = b; \
+		core->p = p; \
 	}
 
 // @r+
 #define INSTXC(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
-		core->r[i] += sizeof(int##S##_t); \
+		core->r[i] = b + sizeof(int##S##_t); \
+		core->p = p; \
 	}
 
 // !r+
 #define INSTXD(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DSD(core); \
-		core->r[i] += sizeof(int##S##_t); \
+		core->r[i] = b + sizeof(int##S##_t); \
+		core->p = p; \
 	}
 
 // -@r
 #define INSTXE(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
-		core->r[i] -= sizeof(int##S##_t); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]) - sizeof(int##S##_t); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		DSI(core); \
 		core->d0 = V(int##S##_t, core->b, a); \
+		core->r[i] = b; \
+		core->p = p; \
 	}
 
 // -!r
 #define INSTXF(S) { \
-		if (G(core->bc, core->p, sizeof(uint8_t))) \
+		uint64_t p; \
+		p = core->p; \
+		if (G(core->bc, p, sizeof(uint8_t))) \
 			return -2; \
 		uint8_t i; \
-		i = V(uint8_t, core->b, core->p) & 31; \
-		core->p++; \
-		core->r[i] = A(sizeof(int##S##_t), core->r[i]); \
-		core->r[i] -= sizeof(int##S##_t); \
+		i = V(uint8_t, core->b, p) & 31; \
+		p++; \
+		uint64_t b; \
+		b = A(sizeof(int##S##_t), core->r[i]) - sizeof(int##S##_t); \
 		uint64_t a; \
-		a = A(sizeof(int##S##_t), core->r[i] + core->r[i ^ 1]); \
+		a = A(sizeof(int##S##_t), b + core->r[i ^ 1]); \
 		if (G(core->bc, a, sizeof(int##S##_t))) \
 			return -2; \
 		V(int##S##_t, core->b, a) = core->d0; \
 		DSD(core); \
+		core->r[i] = b; \
+		core->p = p; \
 	}
 
 // ;
