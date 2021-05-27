@@ -37,9 +37,9 @@
 // ex
 #define INSTX1(S) { \
 		uint##S##_t t; \
-		t = F(UINT##S##_MAX, core->p, (uint##S##_t)core->c0); \
+		t = core->c0; \
 		core->c0 = core->p; \
-		core->p = t; \
+		core->p = F(UINT##S##_MAX, core->p, t); \
 	}
 
 // name ;
