@@ -521,23 +521,23 @@
 	core->dp = core->dp + 1 & 31;
 // rot
 #define INST5E { \
-		uint8_t p; \
-		p = core->dp - 1 & 31; \
+		uint8_t dp; \
+		dp = core->dp - 1 & 31; \
 		int64_t t; \
-		t = core->d[p]; \
-		core->d[p] = core->d1; \
+		t = core->d[dp]; \
+		core->d[dp] = core->d1; \
 		core->d1 = core->d0; \
 		core->d0 = t; \
 	}
 // -rot
 #define INST5F { \
-		uint8_t p; \
-		p = core->dp - 1 & 31; \
+		uint8_t dp; \
+		dp = core->dp - 1 & 31; \
 		int64_t t; \
 		t = core->d0; \
 		core->d0 = core->d1; \
-		core->d1 = core->d[p]; \
-		core->d[p] = t; \
+		core->d1 = core->d[dp]; \
+		core->d[dp] = t; \
 	}
 
 #define NEXT \
