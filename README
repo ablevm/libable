@@ -60,8 +60,8 @@ Virtual Machine
 
  i    8 bits               instruction
  p   64 bits               program counter
- d   64 bits * 32          linear data-stack
- c   64 bits * 32          linear call-stack
+ d   64 bits ...           linear data-stack
+ c   64 bits ...           linear call-stack
  r   64 bits * 32          registers
 
 8 bit unencoded instructions

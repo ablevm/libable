@@ -3,10 +3,12 @@ typedef struct {
 	size_t bc;
 	uint64_t p;
 	uint8_t i;
-	uint8_t dp;
-	int64_t d[32];
-	uint8_t cp;
-	uint64_t c[32];
+	int64_t *d;
+	uint16_t dc;
+	uint16_t dp;
+	uint64_t *c;
+	uint16_t cc;
+	uint16_t cp;
 	uint64_t r[32];
 	uint64_t ts;
 } able_core_t;
@@ -14,8 +16,6 @@ typedef struct {
 int
 able_core_exec(able_core_t *core);
 
-#define ABLE_CORE_DP_MAX 31
-#define ABLE_CORE_CP_MAX 31
 #define ABLE_CORE_RI_MAX 31
 
 #define ABLE_CORE_A(S, V) \
@@ -34,7 +34,7 @@ able_core_exec(able_core_t *core);
 	((C)->dp < (N))
 
 #define ABLE_CORE_DSO(C, N) \
-	((C)->dp + (N) > ABLE_CORE_DP_MAX)
+	((C)->dp + (N) > (C)->dc)
 
 #define ABLE_CORE_DSI(C) \
 	(C)->dp++;
@@ -49,7 +49,7 @@ able_core_exec(able_core_t *core);
 	((C)->cp < (N))
 
 #define ABLE_CORE_CSO(C, N) \
-	((C)->cp + (N) > ABLE_CORE_CP_MAX)
+	((C)->cp + (N) > (C)->cc)
 
 #define ABLE_CORE_CSI(C) \
 	(C)->cp++;
