@@ -134,7 +134,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		core->r[i] = F(UINT##S##_MAX, core->p, (uint##S##_t)DS0); \
 		core->p++; \
@@ -149,7 +149,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, core->p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		core->p++; \
 		DSI(core); \
@@ -166,7 +166,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \
@@ -191,7 +191,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \
@@ -216,7 +216,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \
@@ -241,7 +241,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \
@@ -266,7 +266,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \
@@ -291,7 +291,7 @@
 			return -2; \
 		uint8_t i; \
 		i = V(uint8_t, core->b, p); \
-		if (i > ABLE_CORE_RI_MAX) \
+		if (i >= core->rc) \
 			return -8; \
 		p++; \
 		uint64_t b; \

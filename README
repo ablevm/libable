@@ -62,13 +62,13 @@ Virtual Machine
  p   64 bits               program counter
  d   64 bits ...           linear data-stack
  c   64 bits ...           linear call-stack
- r   64 bits * 32          registers
+ r   64 bits ...           registers
 
 8 bit unencoded instructions
 
 Byte addressed memory with auto-alignment and auto-framing
 
-32 general-purpose registers OR 16 paired address registers
+General-purpose registers OR base+offset address registers
 
 Standard Instruction Set
 

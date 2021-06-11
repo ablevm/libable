@@ -9,14 +9,13 @@ typedef struct {
 	uint64_t *c;
 	uint16_t cc;
 	uint16_t cp;
-	uint64_t r[32];
+	uint64_t *r;
+	uint8_t rc;
 	uint64_t ts;
 } able_core_t;
 
 int
 able_core_exec(able_core_t *core);
-
-#define ABLE_CORE_RI_MAX 31
 
 #define ABLE_CORE_A(S, V) \
 	(((V) + ((S) - 1)) & -(S))
