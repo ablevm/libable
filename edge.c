@@ -51,10 +51,14 @@ able_edge_send_hold(able_edge_t *edge, size_t size, void **data) {
 
 int
 able_edge_send_done(able_edge_t *edge, size_t size) {
-	if (size == 0)
+	if (size == 0) {
+		atomic_store(&edge->sl, 0);
 		return 0;
-	if (size > edge->tc)
+	}
+	if (size > edge->tc) {
+		atomic_store(&edge->sl, 0);
 		return 2;
+	}
 	edge->s += size;
 	edge->sc -= size;
 	atomic_fetch_add(&edge->rc, size);
