@@ -18,7 +18,7 @@ able_port_mesg_t *
 able_port_recv(able_port_t *port);
 
 int
-able_port_send_hold(able_port_t *port, uint16_t size, void **data, uint32_t mark);
+able_port_send_long(able_port_t *port, uint16_t size, void **data, uint32_t mark);
 
 int
 able_port_send_done(able_port_t *port, uint16_t size);

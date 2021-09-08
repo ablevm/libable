@@ -35,14 +35,14 @@ able_port_recv(able_port_t *port) {
 }
 
 int
-able_port_send_hold(able_port_t *port, uint16_t size, void **data, uint32_t mark) {
+able_port_send_long(able_port_t *port, uint16_t size, void **data, uint32_t mark) {
 	if (size == 0)
 		return 1;
 	uint16_t sc;
 	sc = A(sizeof(uint64_t), sizeof(able_port_mesg_t) + size);
 	able_port_mesg_t *m;
 	int y;
-	y = able_edge_send_hold(&port->e, sc, (void **)&m);
+	y = able_edge_send_long(&port->e, sc, (void **)&m);
 	if (y != 0)
 		return y;
 	m->i = mark;
@@ -67,7 +67,7 @@ int
 able_port_send(able_port_t *port, void *data, uint16_t size, uint32_t mark) {
 	void *mb;
 	int y;
-	y = able_port_send_hold(port, size, &mb, mark);
+	y = able_port_send_long(port, size, &mb, mark);
 	if (y != 0)
 		return y;
 	memcpy(mb, data, size);

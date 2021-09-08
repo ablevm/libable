@@ -29,7 +29,7 @@ able_edge_recv(able_edge_t *edge) {
 }
 
 int
-able_edge_send_hold(able_edge_t *edge, size_t size, void **data) {
+able_edge_send_long(able_edge_t *edge, size_t size, void **data) {
 	if (size == 0)
 		return 1;
 	int z;
@@ -70,7 +70,7 @@ int
 able_edge_send(able_edge_t *edge, const void *data, size_t size) {
 	void *m;
 	int y;
-	y = able_edge_send_hold(edge, size, &m);
+	y = able_edge_send_long(edge, size, &m);
 	if (y != 0)
 		return y;
 	memcpy(m, data, size);

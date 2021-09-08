@@ -13,7 +13,7 @@ size_t
 able_edge_recv(able_edge_t *edge);
 
 int
-able_edge_send_hold(able_edge_t *edge, size_t size, void **data);
+able_edge_send_long(able_edge_t *edge, size_t size, void **data);
 
 int
 able_edge_send_done(able_edge_t *edge, size_t size);

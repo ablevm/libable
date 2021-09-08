@@ -8,7 +8,7 @@
 #include <string.h>
 
 int
-able_link_send_hold(able_link_t *link, uint16_t size, void **data) {
+able_link_send_long(able_link_t *link, uint16_t size, void **data) {
 	if (size == 0)
 		return 1;
 	bool z;
@@ -20,7 +20,7 @@ able_link_send_hold(able_link_t *link, uint16_t size, void **data) {
 		return 3;
 	}
 	int y;
-	y = able_port_send_hold(link->p, size, data, link->i);
+	y = able_port_send_long(link->p, size, data, link->i);
 	if (y != 0)
 		atomic_store(&link->sl, 0);
 	return y;
@@ -52,7 +52,7 @@ int
 able_link_send(able_link_t *link, const void *data, uint16_t size) {
 	void *mb;
 	int y;
-	y = able_link_send_hold(link, size, &mb);
+	y = able_link_send_long(link, size, &mb);
 	if (y != 0)
 		return y;
 	memcpy(mb, data, size);
