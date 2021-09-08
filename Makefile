@@ -25,7 +25,7 @@ uninstall:
 	-rm -vf ${LIBDIR}/lib${LIB}.a
 	-rm -vrf ${INCDIR}/${LIB}
 
-lib${LIB}.a: ${OBJS}
+lib${LIB}.a: ${HDRS} ${OBJS}
 	@rm -vf lib${LIB}.a
 	${AR} ${ARFLAGS} lib${LIB}.a ${OBJS}
 	${RANLIB} lib${LIB}.a
