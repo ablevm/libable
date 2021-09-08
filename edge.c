@@ -67,7 +67,7 @@ able_edge_send_done(able_edge_t *edge, size_t size) {
 }
 
 int
-able_edge_send(able_edge_t *edge, void *data, size_t size) {
+able_edge_send(able_edge_t *edge, const void *data, size_t size) {
 	void *m;
 	int y;
 	y = able_edge_send_hold(edge, size, &m);

@@ -49,7 +49,7 @@ able_link_send_done(able_link_t *link, uint16_t size) {
 }
 
 int
-able_link_send(able_link_t *link, void *data, uint16_t size) {
+able_link_send(able_link_t *link, const void *data, uint16_t size) {
 	void *mb;
 	int y;
 	y = able_link_send_hold(link, size, &mb);

@@ -12,7 +12,7 @@ int
 able_host_exec(able_host_t *host);
 
 int
-able_host_node_wait_shim(void *node, able_edge_t *edge, const struct timespec *time);
+able_host_node_wait_shim(void *node, const able_edge_t *edge, const struct timespec *time);
 
 int
-able_host_link_send_shim(void *link, void *data, size_t size);
+able_host_link_send_shim(void *link, const void *data, size_t size);

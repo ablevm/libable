@@ -20,7 +20,7 @@ able_node_init(able_node_t *node) {
 }
 
 int
-able_node_wait(able_node_t *node, able_edge_t *edge, const struct timespec *time) {
+able_node_wait(able_node_t *node, const able_edge_t *edge, const struct timespec *time) {
 	if (edge == NULL)
 		return 0;
 	if (atomic_load(&edge->rc) > 0)
@@ -52,7 +52,7 @@ able_node_wait(able_node_t *node, able_edge_t *edge, const struct timespec *time
 }
 
 int
-able_node_post(able_node_t *node, able_edge_t *edge) {
+able_node_post(able_node_t *node, const able_edge_t *edge) {
 	if (atomic_load(&node->sl) == 0)
 		return 0;
 	pthread_mutex_lock(&node->m);
