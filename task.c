@@ -1,4 +1,3 @@
-#include <stdatomic.h>
 #include <pthread.h>
 #include "task.h"
 
