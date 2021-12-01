@@ -1,11 +1,14 @@
-WELCOME TO ABLE!
+libable
 
 libable implements an efficient, portable and secure general-purpose virtual
 machine and virtual network as a library
 
-GETTING STARTED
+REQUIREMENTS
 
-libable only requires BSD Make and Clang to build and install
+BSD Make
+Clang
+
+GETTING STARTED
 
 Building and installing on OpenBSD
 
