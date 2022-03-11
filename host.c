@@ -24,16 +24,27 @@ able_host_exec(able_host_t *host) {
 			return y;
 		}
 		switch (host->c.i) {
-			case 0x80: { // wait ( p - n)
-				if (DSU(&host->c, 1))
+			case 0x80: { // wait ( t p - n)
+				if (DSU(&host->c, 2))
 					return -6;
 				uint32_t pn;
 				pn = DS0;
+				DSD(&host->c);
 				if (pn >= host->pc) {
 					DS0 = 4;
 					break;
 				}
-				DS0 = able_host_node_wait_shim(host->n, &host->p[pn].e, NULL);
+				struct timespec ts;
+				struct timespec *tp;
+				tp = NULL;
+				uint64_t tv;
+				tv = DS0;
+				if (tv != -1) {
+					ts.tv_sec = tv / 1000000000;
+					ts.tv_nsec = tv % 1000000000;
+					tp = &ts;
+				}
+				DS0 = able_host_node_wait_shim(host->n, &host->p[pn].e, tp);
 				if (DS0 == 0)
 					return -5;
 				break;
