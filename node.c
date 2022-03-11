@@ -8,13 +8,7 @@ int
 able_node_init(able_node_t *node) {
 	atomic_store(&node->sl, 0);
 	pthread_mutex_init(&node->m, NULL);
-	pthread_condattr_t ca;
-	pthread_condattr_init(&ca);
-#ifndef ABLE_COMPAT_MACOS
-	pthread_condattr_setclock(&ca, CLOCK_MONOTONIC);
-#endif
-	pthread_cond_init(&node->v, &ca);
-	pthread_condattr_destroy(&ca);
+	pthread_cond_init(&node->v, NULL);
 	node->w = NULL;
 	return 0;
 }
