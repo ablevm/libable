@@ -1,9 +1,6 @@
 #include <stdatomic.h>
-#include "edge.h"
 #include <pthread.h>
-#include "node.h"
-#include "port.h"
-#include "link.h"
+#include <able/able.h>
 #include "core.h"
 #include "host.h"
 

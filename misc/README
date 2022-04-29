@@ -1,0 +1,136 @@
+libable_misc
+
+libable_misc implements a MISC-inspired virtual machine component as a library
+
+REQUIREMENTS
+
+BSD Make
+Clang
+libable
+
+GETTING STARTED
+
+Building and installing on OpenBSD
+
+$ cp config.mk.def config.mk
+$ make install
+...
+$ 
+
+Building and installing on Ubuntu
+
+# apt install bmake clang
+...
+# exit
+$ cp config.mk.def config.mk
+$ bmake -DCOMPAT_LINUX install
+...
+$ 
+
+Building and installing on macOS
+
+# brew install bmake
+...
+# exit
+$ cp config.mk.def config.mk
+$ bmake -DCOMPAT_MACOS install
+...
+$ 
+
+GETTING INVOLVED
+
+Contact Details
+
+Find us online at ablevm.org or email us at team@ablevm.org
+
+Code of Conduct
+
+Respect each other and please don't spam
+
+LICENSE
+
+ISC-style license
+
+DETAILS
+
+Virtual Machine
+
+      i
+      p
+     c...
+ ...d
+     r...
+
+ i    8 bits               instruction
+ p   64 bits               program counter
+ d   64 bits ...           linear data-stack
+ c   64 bits ...           linear call-stack
+ r   64 bits ...           registers
+
+8 bit unencoded instructions
+
+Byte addressed memory with auto-alignment and auto-framing
+
+General-purpose registers OR base+offset address registers
+
+Standard Instruction Set
+
+ 00  ;         08* r!        10  push      18  +
+ 01  ex        09* r@        11  pop       19  -
+ 02+ name ;    0A* @r        12  lshift    1A  *
+ 03+ name      0B* !r        13  ashift    1B  /mod
+
+ 04+ if        0C* @r+       14  not       1C  drop
+ 05+ -if       0D* !r+       15  and       1D  dup
+ 06+ next      0E* -@r       16  or        1E  over
+ 07+ lit       0F* -!r       17  xor       1F  swap
+
+c20  ;        c28* r!       h30  ;        h38* r!
+c21  ex       c29* r@       h31  ex       h39* r@
+c22+ name ;   c2A* @r       h32+ name ;   h3A* @r
+c23+ name     c2B* !r       h33+ name     h3B* !r
+
+c24+ if       c2C* @r+      h34+ if       h3C* @r+
+c25+ -if      c2D* !r+      h35+ -if      h3D* !r+
+c26+ next     c2E* -@r      h36+ next     h3E* -@r
+c27+ lit      c2F* -!r      h37+ lit      h3F* -!r
+
+d40  ;        d48* r!        50  i@        58  rshift
+d41  ex       d49* r@        51  i!        59  u<
+d42+ name ;   d4A* @r        52  =         5A  u*
+d43+ name     d4B* !r        53  <         5B  u/mod
+
+d44+ if       d4C* @r+       54  negate    5C  nip
+d45+ -if      d4D* !r+       55  abs       5D  tuck
+d46+ next     d4E* -@r       56  min       5E  rot
+d47+ lit      d4F* -!r       57  max       5F  -rot
+
+ 60            68            70            78  
+ 61            69            71            79  
+ 62            6A            72            7A  
+ 63            6B            73            7B  
+
+ 64            6C            74            7C  
+ 65            6D            75            7D  
+ 66            6E            76            7E  
+ 67            6F            77            7F  
+
+Extended Instruction Set
+
+ 80  wait      88            90            98  
+ 81  clip      89            91            99  
+ 82  recv      8A            92            9A  
+ 83  send      8B            93            9B  
+
+ 84            8C            94            9C  
+ 85            8D            95            9D  
+ 86            8E            96            9E  
+ 87            8F            97            9F  
+
+ w = 32 bit default
+ c =  8 bit variant
+ h = 16 bit variant
+ d = 64 bit variant
+
++ followed by n bit immediate where n is w, c, h or d
+* followed by 8 bit register

@@ -2,7 +2,5 @@
 #include "node.h"
 #include "port.h"
 #include "link.h"
-#include "core.h"
-#include "host.h"
 #include "wire.h"
 #include "task.h"

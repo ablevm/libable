@@ -1,0 +1,4 @@
+libable_misc.a
+config.mk
+*.o
+*~

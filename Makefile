@@ -1,6 +1,6 @@
 LIB?=able
-SRCS=edge.c node.c port.c link.c core.c host.c wire.c task.c
-HDRS=edge.h node.h port.h link.h core.h host.h wire.h task.h able.h
+SRCS=edge.c node.c port.c link.c wire.c task.c
+HDRS=edge.h node.h port.h link.h wire.h task.h able.h
 
 .include "config.mk"
 
