@@ -2,23 +2,23 @@
 #include <stddef.h>
 #include "core.h"
 
-#define A ABLE_CORE_A
-#define F ABLE_CORE_F
-#define V ABLE_CORE_V
-#define G ABLE_CORE_G
-#define DSU ABLE_CORE_DSU
-#define DSO ABLE_CORE_DSO
-#define DSI ABLE_CORE_DSI
-#define DSD ABLE_CORE_DSD
-#define CSU ABLE_CORE_CSU
-#define CSO ABLE_CORE_CSO
-#define CSI ABLE_CORE_CSI
-#define CSD ABLE_CORE_CSD
+#define A ABLE_MISC_CORE_A
+#define F ABLE_MISC_CORE_F
+#define V ABLE_MISC_CORE_V
+#define G ABLE_MISC_CORE_G
+#define DSU ABLE_MISC_CORE_DSU
+#define DSO ABLE_MISC_CORE_DSO
+#define DSI ABLE_MISC_CORE_DSI
+#define DSD ABLE_MISC_CORE_DSD
+#define CSU ABLE_MISC_CORE_CSU
+#define CSO ABLE_MISC_CORE_CSO
+#define CSI ABLE_MISC_CORE_CSI
+#define CSD ABLE_MISC_CORE_CSD
 
-#define DS0 ABLE_CORE_DSV(core, 1)
-#define DS1 ABLE_CORE_DSV(core, 2)
-#define DS2 ABLE_CORE_DSV(core, 3)
-#define CS0 ABLE_CORE_CSV(core, 1)
+#define DS0 ABLE_MISC_CORE_DSV(core, 1)
+#define DS1 ABLE_MISC_CORE_DSV(core, 2)
+#define DS2 ABLE_MISC_CORE_DSV(core, 3)
+#define CS0 ABLE_MISC_CORE_CSV(core, 1)
 
 // ;
 #define INSTX0(S) \
@@ -695,7 +695,7 @@
 	goto *inst[core->i];
 
 int
-able_core_exec(able_core_t *core) {
+able_misc_core_exec(able_misc_core_t *core) {
 	static const void *inst[] = {
 		[0x00] = &&inst00,
 		&&inst01,

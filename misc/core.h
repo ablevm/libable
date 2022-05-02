@@ -12,49 +12,49 @@ typedef struct {
 	uint64_t *r;
 	uint8_t rc;
 	uint64_t ts;
-} able_core_t;
+} able_misc_core_t;
 
 int
-able_core_exec(able_core_t *core);
+able_misc_core_exec(able_misc_core_t *core);
 
-#define ABLE_CORE_A(S, V) \
+#define ABLE_MISC_CORE_A(S, V) \
 	(((V) + ((S) - 1)) & -(S))
 
-#define ABLE_CORE_F(M, A, B) \
+#define ABLE_MISC_CORE_F(M, A, B) \
 	(((A) & ~(M)) | (B))
 
-#define ABLE_CORE_V(T, E, A) \
+#define ABLE_MISC_CORE_V(T, E, A) \
 	(*(T *)((E) + (A)))
 
-#define ABLE_CORE_G(M, E, S) \
+#define ABLE_MISC_CORE_G(M, E, S) \
 	((E) > UINT64_MAX - (S) || (E) + (S) > (M))
 
-#define ABLE_CORE_DSU(C, N) \
+#define ABLE_MISC_CORE_DSU(C, N) \
 	((C)->dp < (N))
 
-#define ABLE_CORE_DSO(C, N) \
+#define ABLE_MISC_CORE_DSO(C, N) \
 	((C)->dp + (N) > (C)->dc)
 
-#define ABLE_CORE_DSI(C) \
+#define ABLE_MISC_CORE_DSI(C) \
 	(C)->dp++;
 
-#define ABLE_CORE_DSD(C) \
+#define ABLE_MISC_CORE_DSD(C) \
 	(C)->dp--;
 
-#define ABLE_CORE_DSV(C, N) \
+#define ABLE_MISC_CORE_DSV(C, N) \
 	(C)->d[(C)->dp - N]
 
-#define ABLE_CORE_CSU(C, N) \
+#define ABLE_MISC_CORE_CSU(C, N) \
 	((C)->cp < (N))
 
-#define ABLE_CORE_CSO(C, N) \
+#define ABLE_MISC_CORE_CSO(C, N) \
 	((C)->cp + (N) > (C)->cc)
 
-#define ABLE_CORE_CSI(C) \
+#define ABLE_MISC_CORE_CSI(C) \
 	(C)->cp++;
 
-#define ABLE_CORE_CSD(C) \
+#define ABLE_MISC_CORE_CSD(C) \
 	(C)->cp--;
 
-#define ABLE_CORE_CSV(C, N) \
+#define ABLE_MISC_CORE_CSV(C, N) \
 	(C)->c[(C)->cp - N]

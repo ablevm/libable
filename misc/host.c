@@ -4,19 +4,19 @@
 #include "core.h"
 #include "host.h"
 
-#define DSU ABLE_CORE_DSU
-#define DSO ABLE_CORE_DSO
-#define DSI ABLE_CORE_DSI
-#define DSD ABLE_CORE_DSD
+#define DSU ABLE_MISC_CORE_DSU
+#define DSO ABLE_MISC_CORE_DSO
+#define DSI ABLE_MISC_CORE_DSI
+#define DSD ABLE_MISC_CORE_DSD
 
-#define DS0 ABLE_CORE_DSV(&host->c, 1)
+#define DS0 ABLE_MISC_CORE_DSV(&host->c, 1)
 
 int
-able_host_exec(able_host_t *host) {
+able_misc_host_exec(able_misc_host_t *host) {
 	host->c.ts = host->ts;
 	for (;;) {
 		int y;
-		y = able_core_exec(&host->c);
+		y = able_misc_core_exec(&host->c);
 		if (y != -4) {
 			return y;
 		}
@@ -41,7 +41,7 @@ able_host_exec(able_host_t *host) {
 					ts.tv_nsec = tv % 1000000000;
 					tp = &ts;
 				}
-				DS0 = able_host_node_wait_shim(host->n, &host->p[pn].e, tp);
+				DS0 = able_misc_host_node_wait_shim(host->n, &host->p[pn].e, tp);
 				if (DS0 == 0)
 					return -5;
 				break;
@@ -127,7 +127,7 @@ able_host_exec(able_host_t *host) {
 					DS0 = 8;
 					break;
 				}
-				DS0 = able_host_link_send_shim(host->l[ln], host->c.b + a, u);
+				DS0 = able_misc_host_link_send_shim(host->l[ln], host->c.b + a, u);
 				break;
 			}
 			default:
