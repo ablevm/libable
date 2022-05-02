@@ -6,12 +6,12 @@ int
 able_edge_clip(able_edge_t *edge, void *data, size_t size) {
 	if (atomic_load(&edge->rc) > 0)
 		return 1;
-	int z;
-	z = 0;
-	while (!atomic_compare_exchange_weak(&edge->sl, &z, 1)) {
-		if (z == 2)
+	int v;
+	v = 0;
+	while (!atomic_compare_exchange_weak(&edge->sl, &v, -1)) {
+		if (v == 1)
 			return -1;
-		z = 0;
+		v = 0;
 	}
 	if (atomic_load(&edge->rc) > 0) {
 		atomic_store(&edge->sl, 0);
@@ -32,18 +32,18 @@ int
 able_edge_send_long(able_edge_t *edge, size_t size, void **data) {
 	if (size == 0)
 		return 1;
-	int z;
-	z = 0;
-	while (!atomic_compare_exchange_weak(&edge->sl, &z, 1)) {
-		if (z == 2)
+	int v;
+	v = 0;
+	while (!atomic_compare_exchange_weak(&edge->sl, &v, -1)) {
+		if (v == 1)
 			return -1;
-		z = 0;
+		v = 0;
 	}
 	if (edge->sc < size) {
 		atomic_store(&edge->sl, 0);
 		return -2;
 	}
-	atomic_store(&edge->sl, 2);
+	atomic_store(&edge->sl, 1);
 	edge->tc = size;
 	*data = edge->s;
 	return 0;
