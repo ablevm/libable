@@ -52,7 +52,7 @@ able_node_post(able_node_t *node, const able_edge_t *edge) {
 	pthread_mutex_lock(&node->m);
 	if (node->w != edge) {
 		pthread_mutex_unlock(&node->m);
-		return 4;
+		return 0;
 	}
 	pthread_cond_signal(&node->v);
 	pthread_mutex_unlock(&node->m);

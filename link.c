@@ -2,54 +2,68 @@
 #include "edge.h"
 #include <pthread.h>
 #include "node.h"
-#include "port.h"
 #include "link.h"
-#include <stdbool.h>
 #include <string.h>
 
 int
-able_link_send_long(able_link_t *link, uint16_t size, void **data) {
+able_link_join(able_link_t *link, able_edge_t *edge, uintptr_t mark, void *node) {
+	int v;
+	v = 0;
+	while (!atomic_compare_exchange_weak(&link->sl, &v, -1)) {
+		if (v == 1)
+			return -1;
+		v = 0;
+	}
+	link->e = edge;
+	link->i = mark;
+	link->n = node;
+	atomic_store(&link->sl, 0);
+	return 0;
+}
+
+int
+able_link_send_long(able_link_t *link, size_t size, void **data) {
 	if (size == 0)
 		return 1;
-	bool z;
-	z = 0;
-	if (!atomic_compare_exchange_weak(&link->sl, &z, 1))
-		return -3;
-	if (link->p == NULL) {
+	int v;
+	v = 0;
+	while (!atomic_compare_exchange_weak(&link->sl, &v, -1)) {
+		if (v == 1)
+			return -3;
+		v = 0;
+	}
+	if (link->e == NULL) {
 		atomic_store(&link->sl, 0);
 		return 3;
 	}
 	int y;
-	y = able_port_send_long(link->p, size, data, link->i);
-	if (y != 0)
+	y = able_edge_send_long(link->e, size, data);
+	if (y != 0) {
 		atomic_store(&link->sl, 0);
-	return y;
+		return y;
+	}
+	atomic_store(&link->sl, 1);
+	return 0;
 }
 
 int
-able_link_send_done(able_link_t *link, uint16_t size) {
-	able_port_t *p;
-	p = link->p;
-	if (size == 0) {
-		int y;
-		y = able_port_send_done(p, 0);
+able_link_send_done(able_link_t *link, size_t size) {
+	able_edge_t *e;
+	e = link->e;
+	int y;
+	y = able_edge_send_done(e, size);
+	if (y != 0) {
 		atomic_store(&link->sl, 0);
 		return y;
 	}
 	void *n;
 	n = link->n;
-	int y;
-	y = able_port_send_done(p, size);
-	if (y != 0) {
-		atomic_store(&link->sl, 0);
-		return y;
-	}
 	atomic_store(&link->sl, 0);
-	return able_link_node_post_shim(n, &p->e);
+	return able_link_node_post_shim(n, e);
 }
 
 int
-able_link_send(able_link_t *link, const void *data, uint16_t size) {
+able_link_send(able_link_t *link, const void *data, size_t size) {
 	void *mb;
 	int y;
 	y = able_link_send_long(link, size, &mb);

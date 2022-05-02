@@ -24,10 +24,10 @@ able_misc_host_exec(able_misc_host_t *host) {
 			case 0x80: { // wait ( t p - n)
 				if (DSU(&host->c, 2))
 					return -6;
-				uint32_t pn;
-				pn = DS0;
+				uint32_t en;
+				en = DS0;
 				DSD(&host->c);
-				if (pn >= host->pc) {
+				if (en >= host->ec) {
 					DS0 = 4;
 					break;
 				}
@@ -41,7 +41,7 @@ able_misc_host_exec(able_misc_host_t *host) {
 					ts.tv_nsec = tv % 1000000000;
 					tp = &ts;
 				}
-				DS0 = able_misc_host_node_wait_shim(host->n, &host->p[pn].e, tp);
+				DS0 = able_misc_host_node_wait_shim(host->n, &host->e[en], tp);
 				if (DS0 == 0)
 					return -5;
 				break;
@@ -49,15 +49,15 @@ able_misc_host_exec(able_misc_host_t *host) {
 			case 0x81: { // clip ( a # p - n)
 				if (DSU(&host->c, 3))
 					return -6;
-				uint32_t pn;
-				pn = DS0;
+				uint32_t en;
+				en = DS0;
 				DSD(&host->c);
 				uint64_t u;
 				u = DS0;
 				DSD(&host->c);
 				uint64_t a;
 				a = DS0;
-				if (pn >= host->pc) {
+				if (en >= host->ec) {
 					DS0 = 2;
 					break;
 				}
@@ -69,7 +69,19 @@ able_misc_host_exec(able_misc_host_t *host) {
 					DS0 = 4;
 					break;
 				}
-				DS0 = able_port_clip(&host->p[pn], host->c.b + a, u);
+				able_misc_host_buff_t *b;
+				b = &host->b[en];
+				if (b->rc > 0) {
+					DS0 = 1;
+					break;
+				}
+				uint8_t *s;
+				s = host->c.b + a;
+				int y;
+				y = able_edge_clip(&host->e[en], s, u);
+				if (y == 0)
+					b->r = s;
+				DS0 = y;
 				break;
 			}
 			case 0x82: { // recv ( p - a # n)
@@ -77,27 +89,33 @@ able_misc_host_exec(able_misc_host_t *host) {
 					return -6;
 				if (DSO(&host->c, 2))
 					return -7;
-				uint32_t pn;
-				pn = DS0;
-				if (pn >= host->pc) {
+				uint32_t en;
+				en = DS0;
+				if (en >= host->ec) {
 					DS0 = 1;
 					break;
 				}
-				able_port_mesg_t *m;
-				m = able_port_recv(&host->p[pn]);
-				if (m != NULL) {
-					DS0 = m->b - host->c.b;
-					DSI(&host->c);
-					DS0 = m->bc;
-					DSI(&host->c);
-					DS0 = 0;
-				} else {
+				able_misc_host_buff_t *b;
+				b = &host->b[en];
+				if (b->rc == 0)
+					b->rc += able_edge_recv(&host->e[en]);
+				able_mesg_t *m;
+				if (b->rc < sizeof(able_mesg_t)) {
 					DS0 = 0;
 					DSI(&host->c);
 					DS0 = 0;
 					DSI(&host->c);
 					DS0 = -1;
+					break;
 				}
+				m = (able_mesg_t *)b->r;
+				b->r += m->sc;
+				b->rc -= m->sc;
+				DS0 = m->b - host->c.b;
+				DSI(&host->c);
+				DS0 = m->bc;
+				DSI(&host->c);
+				DS0 = 0;
 				break;
 			}
 			case 0x83: { // send ( a # l - n)
@@ -121,10 +139,6 @@ able_misc_host_exec(able_misc_host_t *host) {
 				}
 				if (a >= host->c.bc || a + u > host->c.bc) {
 					DS0 = 7;
-					break;
-				}
-				if (u > UINT16_MAX - sizeof(able_port_mesg_t)) {
-					DS0 = 8;
 					break;
 				}
 				DS0 = able_misc_host_link_send_shim(host->l[ln], host->c.b + a, u);

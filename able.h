@@ -1,6 +1,5 @@
 #include "edge.h"
 #include "node.h"
-#include "port.h"
 #include "link.h"
-#include "wire.h"
+#include "mesg.h"
 #include "task.h"

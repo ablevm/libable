@@ -1,7 +1,14 @@
 typedef struct {
+	uint8_t *r;
+	size_t rc;
+} able_misc_host_buff_t;
+
+typedef struct {
 	void *n;
-	able_port_t *p;
-	uint32_t pc;
+	able_edge_t *e;
+	uint32_t ec;
+	able_misc_host_buff_t *b;
+	uint32_t bc;
 	void **l;
 	uint32_t lc;
 	able_misc_core_t c;
