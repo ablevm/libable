@@ -1,6 +1,6 @@
 typedef struct {
-	uint8_t *b;
-	size_t bc;
+	uint8_t *m;
+	size_t mc;
 	uint64_t p;
 	uint8_t i;
 	int64_t *d;

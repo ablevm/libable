@@ -65,7 +65,7 @@ able_misc_host_exec(able_misc_host_t *host) {
 					DS0 = 3;
 					break;
 				}
-				if (a >= host->c.bc || a + u > host->c.bc) {
+				if (a >= host->c.mc || a + u > host->c.mc) {
 					DS0 = 4;
 					break;
 				}
@@ -76,7 +76,7 @@ able_misc_host_exec(able_misc_host_t *host) {
 					break;
 				}
 				uint8_t *s;
-				s = host->c.b + a;
+				s = host->c.m + a;
 				int y;
 				y = able_edge_clip(&host->e[en], s, u);
 				if (y == 0)
@@ -111,7 +111,7 @@ able_misc_host_exec(able_misc_host_t *host) {
 				m = (able_mesg_t *)b->r;
 				b->r += m->sc;
 				b->rc -= m->sc;
-				DS0 = m->b - host->c.b;
+				DS0 = m->b - host->c.m;
 				DSI(&host->c);
 				DS0 = m->bc;
 				DSI(&host->c);
@@ -137,11 +137,11 @@ able_misc_host_exec(able_misc_host_t *host) {
 					DS0 = 6;
 					break;
 				}
-				if (a >= host->c.bc || a + u > host->c.bc) {
+				if (a >= host->c.mc || a + u > host->c.mc) {
 					DS0 = 7;
 					break;
 				}
-				DS0 = able_misc_host_link_send_shim(host->l[ln], host->c.b + a, u);
+				DS0 = able_misc_host_link_send_shim(host->l[ln], host->c.m + a, u);
 				break;
 			}
 			default:
