@@ -24,7 +24,7 @@ able_host_exec(able_host_t *host) {
 			return y;
 		}
 		switch (host->c.i) {
-			case 0x80: { // wait ( p - f)
+			case 0x80: { // wait ( p - n)
 				if (DSU(&host->c, 1))
 					return -6;
 				uint32_t pn;
@@ -38,7 +38,7 @@ able_host_exec(able_host_t *host) {
 					return -5;
 				break;
 			}
-			case 0x81: { // clip ( a # p - f)
+			case 0x81: { // clip ( a # p - n)
 				if (DSU(&host->c, 3))
 					return -6;
 				uint32_t pn;
@@ -64,7 +64,7 @@ able_host_exec(able_host_t *host) {
 				DS0 = able_port_clip(&host->p[pn], host->c.b + a, u);
 				break;
 			}
-			case 0x82: { // recv ( p - a # f)
+			case 0x82: { // recv ( p - a # n)
 				if (DSU(&host->c, 1))
 					return -6;
 				if (DSO(&host->c, 2))
@@ -92,7 +92,7 @@ able_host_exec(able_host_t *host) {
 				}
 				break;
 			}
-			case 0x83: { // send ( a # l - f)
+			case 0x83: { // send ( a # l - n)
 				if (DSU(&host->c, 3))
 					return -6;
 				uint32_t ln;
